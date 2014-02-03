@@ -94,7 +94,7 @@ Y = mdscale(d,2);
 %% Q: Use the 'plot' command to visualize the recovered mental space
 
 %% Q: Label the axes using the 'xlabel' and 'ylabel' commands and
-% add a title with the 'title' commands ? Remember to always label
+% add a title with the 'title' commands --  Remember to always label
 % the figures axes and to always add a title
 
 %% Here we call the 'hold on' command to tell matlab to hold on
@@ -116,7 +116,7 @@ hold off;
 
 
 %% Q: Run hierarchical clutering on your dissim data using the
-% 'linkage' function ? you will have to first format your dissim
+% 'linkage' function -- you will have to first format your dissim
 % data using the 'squareform' command provided below.
 D = squareform(d);
 Z = linkage(D);
