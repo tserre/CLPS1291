@@ -10,14 +10,16 @@
 % email: Thomas_Serre@Brown.edu
 % Website: http://serre-lab.clps.brown.edu
 % February 2014; 
-% Execute the code in each individual cell by moving the cursor to a cell and press cmd+<enter>
-% Below we will be playing with faces that I extracted from a
-% popular computer vision database used to test face recognition
-% algorithms and called 'Faces in the Wild'
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% First you should download the data at                  %%
-%% https://www.dropbox.com/s/35kps5eb5j6sjc0/FACES.mat    %%
+% Execute the code in each individual cell by moving the  %%
+% cursor to a cell and press cmd+<enter>                  %%
+% Below we will be playing with faces that I extracted    %%
+% from a popular computer vision database used to test    %%
+% face rec algorithms and called 'Faces in the Wild'      %%
+% First you should download the data at                   %%
+% https://www.dropbox.com/s/35kps5eb5j6sjc0/FACES.mat     %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clc;
@@ -25,33 +27,34 @@ clear all;
 close all;
 
 %% load the FACES variable 
-% find out what happened? what variable got loaded? what is their size?
+% find out what happened? what variable got loaded? what are their sizes?
 
 
 % number of images in the database and their size
 he    = size(IMG, 1); % image height
 wi    = size(IMG, 2); % image width
-Nimg  = size(IMG, 3);  % num images
+Nimg  = size(IMG, 3); % num images
 
 %% use the imshow command to visualize a few faces
 
-%% try the 'montage' command, use the zoom to see individual faces
-% you will need to reshape your nxnxm IMG array into nxnx1xm array using the reshape command
 
-
-%% Scan through the first couple of faces and display them
+%% Scan through the first couple of faces and display them using imshow
 for ii =1:30
     ii
     pause(.2) % Use the 'pause' command to make sure things get displayed
 end
 
+%% try the 'montage' command, use the zoom to see individual faces
+% you will need to reshape your nxnxm IMG array into nxnx1xm array using the reshape command
+
+
+%% Let's try to morph between Face1 and Face2
 Face1 = IMG(:,:,5);
 subplot(2,2,1); imshow(Face1)
 Face2 = IMG(:,:,6);
 subplot(2,2,2); imshow(Face2)
 
 a = .5; % Morphing parameter;
-%% Let's try to morph between Face1 and Face2
 % Morph = ;
 subplot(2,2,3); imshow(Morph)
 
@@ -67,7 +70,8 @@ w   = zeros(he*wi,1);
 % database
 for ii = 1:Nimg
     x  = IMG(:,:,ind(ii));
-    % dw = ; %% compute update
+    % dw = ; %% compute update (remember it should be
+    % proportional to x-w)
     % w  = ; %% update w
     
     % Show the current image
@@ -106,9 +110,10 @@ end
 % DA = pdist2();
 
 %% Compute the average distance between a face in the db and the average face
-DF = pdist2();
+DF  = pdist2();
+mDF = mean(DF);
 
-disp(['Mean face-to-average distance: ' num2str(round(mean(DF)))]);
+disp(['Mean face-to-average distance: ' num2str(round(mDF))]);
 disp(['Angelina-to-average distance:  ' num2str(round(DA))]);
 
 
