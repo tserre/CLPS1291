@@ -13,17 +13,6 @@
 % Website: http://serre-lab.clps.brown.edu
 % February 2014;
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Execute the code in each individual cell by moving the  %%
-% cursor to a cell and press cmd+<enter>                  %%
-% Below we will be playing with faces that I extracted    %%
-% from a popular computer vision database used to test    %%
-% face rec algorithms and called 'Faces in the Wild'      %%
-% First you should download the data at                   %%
-% https://www.dropbox.com/s/35kps5eb5j6sjc0/FACES.mat     %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 clc;
 clear all;
 close all;
@@ -34,6 +23,8 @@ close all;
 clear all;
 x   = 2.0 + 3.0*randn(2,30);
 sim = 'rbf'; % 'rbf' or 'dot-prod' or 'sig'
+
+%% Excercise: Try to implement the normalized dot-product
 
 % Algorithm starts
 ind = randperm(size(x,2)); %% randomize the presentation order
@@ -49,7 +40,6 @@ for ii = 1:size(x,2)
             % compute distance between current stimulus x(:,ind(ii)) and synaptic weight
             D2   = sum((x(:,ind(ii))-w).^2);
             sig2 = 100;
-            % exponentiate
             y = exp(-D2/sig2);
             
             plot([m(1) x(1,ind(ii))], [m(2) x(2,ind(ii))], '-r', 'MarkerSize', 10);
@@ -60,6 +50,7 @@ for ii = 1:size(x,2)
             
         case 'dot-prod'
             y = w'*x(:,ind(ii));
+            
             plot([0 x(1,ind(ii))], [0 x(2,ind(ii))], '-r', 'MarkerSize', 10);
             plot([0 m(1)], [0  m(2)], '-g', 'MarkerSize', 10);
             legend('samples', 'current','prototype')
@@ -71,8 +62,6 @@ for ii = 1:size(x,2)
             
             plot([0 x(1,ind(ii))], [0 x(2,ind(ii))], '-r', 'MarkerSize', 10);
             plot([0 m(1)], [0  m(2)], '-g', 'MarkerSize', 10);
-            
-            
             legend('samples', 'current','prototype')
             hold off
             subplot(1,2,2); bar(1,y); axis([0 2 0 1]); axis off
@@ -89,10 +78,7 @@ clear all;
 
 K  = 3; %% K for k-means
 
-c  = {'k.', 'k.', 'k.', 'ko', 'k<'};
-c1 = {'bs', 'rp', 'm>', 'go', 'k<'};
-c2 = {'b',  'r',  'm',  'g',  'k'};
-c3 = {'s',  'p',  '>',  'o',  '<'};
+col = [1 0 0; 0 1 0; 0 0 1; 1 1 0; 1 0 1; 0 1 1];
 
 dim     = 2;
 my_var  = 1;
@@ -116,12 +102,9 @@ lab  = [ones(size(cluster1,1),1); ...
 [Ndata, dims] = size(X);
 
 figure
-hold on;
-plot(cluster1(:,1),cluster1(:,2), c{1});
-plot(cluster2(:,1),cluster2(:,2), c{2});
-plot(cluster3(:,1),cluster3(:,2), c{3});
+scatter(X(:,1),X(:,2), 30, [0 0 0]);
 axis([-10 5 -6 10]);
-
+hold on;
 
 % Initial prototype assignment (arbitrary)
 ind = randperm(size(X,1));
@@ -132,50 +115,48 @@ means(K,:) = mean(X(K:Ndata,:));
 
 cmp = 1 + maxerr;
 while (cmp > maxerr)
-    % Sums (class) and data counters (Nclass) initialization
+    
     class  = zeros(K,dims);
     Nclass = zeros(K,1);
-    m = m+1;
+    myind  = [];
     
-    myind = [];
-    hold on;
+    scatter(means(:,1), means(:,2), 200, col(1:K,:), 'fill' );
     
-    for i = 1:K
-        plot(means(i,1), means(i,2), c1{i}, 'MarkerSize', 14, 'MarkerFaceColor', c2{i}, 'MarkerEdgeColor', 'k');
-    end
-    pause
+    pause;
     
     % Groups each elements to the nearest prototype
-    for i=1:Ndata
-        for j=1:K
+    for ii = 1:Ndata
+        for jj = 1:K
             % Euclidean distance from data to each prototype
-            dist(j) = norm(X(i,:)-means(j,:))^2;
+            dist(jj) = norm(X(ii,:)-means(jj,:))^2;
         end
         % Find indices of minimum distance
         index_min = find(~(dist-min(dist)));
+        
         % If there are multiple min distances, decide randomly
-        index_min = index_min(ceil(length(index_min)*rand));
-        class(index_min,:) = class(index_min,:) + X(i,:);
-        Nclass(index_min) = Nclass(index_min) + 1;
-        myind = [myind index_min];
+        index_min          = index_min(ceil(length(index_min)*rand));
+        class(index_min,:) = class(index_min,:) + X(ii,:);
+        Nclass(index_min)  = Nclass(index_min) + 1;
+        myind              = [myind index_min];
     end
+    
     err = 0;
-    for i=1:K
-        class(i,:) = class(i,:) / Nclass(i);
-        ind = find(myind==i);
-        for j = 1:length(ind)
-            plot(X(ind(j),1),X(ind(j),2), [c2{i} c3{lab(ind(j))}]);
-        end
-        err = err+sum(sqrt(sum((X(ind,:)-repmat(class(i,:),length(ind),1)).^2,2)));
+    for ii = 1:K
+        class(ii,:) = class(ii,:) / Nclass(ii);
+        ind         = find(myind==ii);
+        
+        scatter(X(ind,1),X(ind,2), 30, repmat(col(ii,:), length(ind),1));
+        
+        err = err+sum(sqrt(sum((X(ind,:)-repmat(class(ii,:),length(ind),1)).^2,2)));
     end
-    hold off;
+    
     title(['Objective function: ' num2str(err)])
-    pause
+    pause;
     
     % Compare results with previous iteration
     cmp = 0;
-    for i=1:K
-        cmp = norm(class(i,:)-means(i,:));
+    for ii = 1:K
+        cmp = norm(class(ii,:)-means(ii,:));
     end
     
     % Prototype update
