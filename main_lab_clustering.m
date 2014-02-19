@@ -1,17 +1,17 @@
 % This is a MATLAB script for the
-% CLPS1291 lecture on kemans.
+% CLPS1291 lab on attractiveness
 
 % Other m-files required: none
 % Subfunctions: none
 % MAT-files required: none
 % Author: Thomas Serre
+% The k-means code is a modified version of the
+% simple_kmedias function by Mauricio Martinez-Garcia, 2003,2007
 % Brown University
 % CLPS Department
 % email: Thomas_Serre@Brown.edu
 % Website: http://serre-lab.clps.brown.edu
 % February 2014;
-% The k-means code is a modified version of the
-% simple_kmedias function by Mauricio Martinez-Garcia, 2003,2007
 
 clc;
 clear all;
@@ -81,19 +81,18 @@ K  = 3; %% K for k-means
 col = [1 0 0; 0 1 0; 0 0 1; 1 1 0; 1 0 1; 0 1 1];
 
 dim     = 2;
+my_var  = 1;
+my_sdev = sqrt(my_var);
+
 %%init
 dist    = zeros(1,K);
 maxerr  = 0;
 m       = 1;
 
-clus_size = [100 100 700];
-my_var    = [2 2 2];
-my_sdev   = sqrt(my_var);
 
-
-cluster1 = my_sdev(1)*randn(clus_size(1),dim) + kron(ones(clus_size(1),1),[0,0]);
-cluster2 = my_sdev(2)*randn(clus_size(2),dim) + kron(ones(clus_size(2),1),[0,5]);
-cluster3 = my_sdev(3)*randn(clus_size(3),dim) + kron(ones(clus_size(3),1),[-5,0]);
+cluster1 = my_sdev*randn(200,dim) + kron(ones(200,1),[0,0]);
+cluster2 = my_sdev*randn(200,dim) + kron(ones(200,1),[0,5]);
+cluster3 = my_sdev*randn(300,dim) + kron(ones(300,1),[-5,0]);
 
 % Build data matrix with corresponding labels lab
 X    = [cluster1 ; cluster2 ; cluster3];
@@ -123,7 +122,7 @@ while (cmp > maxerr)
     
     scatter(means(:,1), means(:,2), 200, col(1:K,:), 'fill' );
     
-    pause(.5);
+    pause;
     
     % Groups each elements to the nearest prototype
     for ii = 1:Ndata
@@ -152,7 +151,7 @@ while (cmp > maxerr)
     end
     
     title(['Objective function: ' num2str(err)])
-    pause(.5);
+    pause;
     
     % Compare results with previous iteration
     cmp = 0;
