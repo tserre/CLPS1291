@@ -1,170 +1,134 @@
 % This is a MATLAB script for the
-% CLPS1291 lab on attractiveness
+% CLPS1291 lab on clustering
 
 % Other m-files required: none
 % Subfunctions: none
 % MAT-files required: none
 % Author: Thomas Serre
-% The k-means code is a modified version of the
-% simple_kmedias function by Mauricio Martinez-Garcia, 2003,2007
 % Brown University
 % CLPS Department
 % email: Thomas_Serre@Brown.edu
 % Website: http://serre-lab.clps.brown.edu
 % February 2014;
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% FIRST PLEASE DOWNLOAD DATA AT                           %%
+%% https://www.dropbox.com/s/7xp2h2kzle24vck/Archive.zip   %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% Kmeans on digits
 clc;
 clear all;
 close all;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Model neuron coding for distance from average for toy data
-%% Excercise for home: Try to run the code on your faces...
-clear all;
-x   = 2.0 + 3.0*randn(2,30);
-sim = 'rbf'; % 'rbf' or 'dot-prod' or 'sig'
+% Load data
+load ../Data/mnist_all
 
-%% Excercise: Try to implement the normalized dot-product
+% Here you can play with different digits train0 -- train9
+% these are siz*siz images where siz = 28;
+A   = double(train8)/255;
+siz = sqrt(size(A,2));
 
-% Algorithm starts
-ind = randperm(size(x,2)); %% randomize the presentation order
-m   = mean(x,2); %% sample mean
-w   = m;
+% Below we sample a subset of the data to speed up the
+% computations
+I   = randperm(size(A,1));
+A   = A(I(1:1000),:);
 
-for ii = 1:size(x,2)
-    subplot(1,2,1); plot(x(1,:), x(2,:), 'o');
+% run kmeans
+% try help on kmeans, try different distance/similarity 
+% measures to see how they impact your results
+
+k = 1; % The k of kmeans
+% [ind, C, sumD, D] = kmeans( );  
+                                                                
+% Visualize the prototypes using subplots or montage
+% Vary k and comment.
+figure(1);
+
+
+
+%% Vector quantization -- Think of coding individual digits with
+% one of your learned prototypes
+
+figure(2)
+n = 12;
+m = ceil(sqrt(3*n));
+
+for ii = 1:n
+    % Below show inidviudal digits
+    subplot(m, m, 3*(ii-1)+1);
+    
+    axis off; axis square; colormap gray;  title('Digit');
+    
+    % Below show the closest prototype
+    subplot(m, m, 3*(ii-1)+2);
+    
+    axis off; axis square; colormap gray; title(['Proto. ' num2str(ind(ii))]);
+    
+    % Below show the reconstruction error (the image difference
+    % between the sample and the closest prototype
+    subplot(m, m, 3*(ii-1)+3);
+    
+    axis off; axis square; colormap gray; title(['Error: ' num2str(D(ii,ind(ii)))]);
+end
+
+suptitle([num2str(k) ' clusters (' num2str(mean(min(D,[],2))) ')']);
+
+%% Additional excercise 1: Get kmeans to run on your own data
+
+%% Segmentation example
+d = dir('../Data/images/*.tif');
+k = 2; % The k of kmeans
+close all
+
+for ii = 1:length(d)
+    
+    img = double(imresize(imread(['../Data/images/' d(ii).name]), .1));
+    siz = size(img);
+    
+    figure(ii)
+    subplot(2,2,1)
+    imagesc(img)
+    axis off; axis square;
+        
+    % Reshape your image so that individual (R,G,B) pixel
+    % intensities are treated as samples when you call kmeans and
+    % run kmeans on your image
+    
+    % A = reshape();
+
+    [ind, C] = kmeans(A, k);
+    
+    % Plot a random subset of pixels together with the cluster
+    % centers and the sample mean -- use plot3
+    
+    %     I = randperm();
+    %     A = ;
+    
+    subplot(2,2,3)
+    %     plot3( ,'.');
     hold on;
+    %     plot3( , 'p', 'MarkerEdgeColor','r', ...
+    %         'MarkerFaceColor', 'r' , 'MarkerSize', 12);
     
-    switch sim
-        case 'rbf'
-            % compute distance between current stimulus x(:,ind(ii)) and synaptic weight
-            D2   = sum((x(:,ind(ii))-w).^2);
-            sig2 = 100;
-            y = exp(-D2/sig2);
-            
-            plot([m(1) x(1,ind(ii))], [m(2) x(2,ind(ii))], '-r', 'MarkerSize', 10);
-            plot(m(1), m(2), 'pm', 'MarkerSize', 10);
-            legend('samples', 'current','prototype')
-            hold off
-            subplot(1,2,2); bar(1,y); axis([0 2 0 1]); axis off
-            
-        case 'dot-prod'
-            y = w'*x(:,ind(ii));
-            
-            plot([0 x(1,ind(ii))], [0 x(2,ind(ii))], '-r', 'MarkerSize', 10);
-            plot([0 m(1)], [0  m(2)], '-g', 'MarkerSize', 10);
-            legend('samples', 'current','prototype')
-            hold off
-            subplot(1,2,2); bar(1,y); axis([0 2 -10 10]); axis off
-            
-        case 'sig'
-            y = logsig(w'*x(:,ind(ii)));
-            
-            plot([0 x(1,ind(ii))], [0 x(2,ind(ii))], '-r', 'MarkerSize', 10);
-            plot([0 m(1)], [0  m(2)], '-g', 'MarkerSize', 10);
-            legend('samples', 'current','prototype')
-            hold off
-            subplot(1,2,2); bar(1,y); axis([0 2 0 1]); axis off
-    end
-    pause
+    m = mean(A);
+    %     plot3( ,'o', 'MarkerEdgeColor','g', ...
+    %         'MarkerFaceColor', 'g' , 'MarkerSize',12);
+    hold off;
+    
+    xlabel('red');
+    ylabel('green');
+    zlabel('blue');
+    
+    % Show an image corresponding to the cluster assignment
+    subplot(2,2,2)
+    %     imagesc( );
+    colorbar;
+    axis off; axis square;
 end
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% K-means demo
-
-close all;
-clear all;
-
-K  = 3; %% K for k-means
-
-col = [1 0 0; 0 1 0; 0 0 1; 1 1 0; 1 0 1; 0 1 1];
-
-dim     = 2;
-my_var  = 1;
-my_sdev = sqrt(my_var);
-
-%%init
-dist    = zeros(1,K);
-maxerr  = 0;
-m       = 1;
-
-
-cluster1 = my_sdev*randn(200,dim) + kron(ones(200,1),[0,0]);
-cluster2 = my_sdev*randn(200,dim) + kron(ones(200,1),[0,5]);
-cluster3 = my_sdev*randn(300,dim) + kron(ones(300,1),[-5,0]);
-
-% Build data matrix with corresponding labels lab
-X    = [cluster1 ; cluster2 ; cluster3];
-lab  = [ones(size(cluster1,1),1); ...
-    2*ones(size(cluster2,1),1); 3*ones(size(cluster3,1),1)];
-
-[Ndata, dims] = size(X);
-
-figure
-scatter(X(:,1),X(:,2), 30, [0 0 0]);
-axis([-10 5 -6 10]);
-hold on;
-
-% Initial prototype assignment (arbitrary)
-ind = randperm(size(X,1));
-for i=1:K-1
-    means(i,:) = X(ind(i),:);
-end
-means(K,:) = mean(X(K:Ndata,:));
-
-cmp = 1 + maxerr;
-while (cmp > maxerr)
-    
-    class  = zeros(K,dims);
-    Nclass = zeros(K,1);
-    myind  = [];
-    
-    scatter(means(:,1), means(:,2), 200, col(1:K,:), 'fill' );
-    
-    pause;
-    
-    % Groups each elements to the nearest prototype
-    for ii = 1:Ndata
-        for jj = 1:K
-            % Euclidean distance from data to each prototype
-            dist(jj) = norm(X(ii,:)-means(jj,:))^2;
-        end
-        % Find indices of minimum distance
-        index_min = find(~(dist-min(dist)));
-        
-        % If there are multiple min distances, decide randomly
-        index_min          = index_min(ceil(length(index_min)*rand));
-        class(index_min,:) = class(index_min,:) + X(ii,:);
-        Nclass(index_min)  = Nclass(index_min) + 1;
-        myind              = [myind index_min];
-    end
-    
-    err = 0;
-    for ii = 1:K
-        class(ii,:) = class(ii,:) / Nclass(ii);
-        ind         = find(myind==ii);
-        
-        scatter(X(ind,1),X(ind,2), 30, repmat(col(ii,:), length(ind),1));
-        
-        err = err+sum(sqrt(sum((X(ind,:)-repmat(class(ii,:),length(ind),1)).^2,2)));
-    end
-    
-    title(['Objective function: ' num2str(err)])
-    pause;
-    
-    % Compare results with previous iteration
-    cmp = 0;
-    for ii = 1:K
-        cmp = norm(class(ii,:)-means(ii,:));
-    end
-    
-    % Prototype update
-    means = class;
-end
-
-Nmeans = Nclass;
-
-
-
-
+%% Additional excercise 2: Create a funtion called segment_image
+% which takes as input an image and returns prototypes and
+% segments for that image
