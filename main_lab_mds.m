@@ -41,9 +41,11 @@
 % Human judgments of 21 animals (presented as pictures on a 5 point scale) [animalpictures5.mat], of 21 animals (presented as pictures on a 5 point scale) [animalpictures5.mat], of 21 animals (presented as pictures on an 11 point scale) [animalpictures11.mat], of 21 animals (presented as words on a 5 point scale) [animalnames5.mat], of 21 animals (presented as words on an 11 point scale) [animalnames11.mat], of 25 faces (5 point scale) [faces5.mat], and of 25 faces (11 point scale) [faces11.mat], together with two bitmap files with the face stimuli [faces.bmp, faces2.bmp]. From (as yet; probably never-to-be) unreported research I did a while back.
 % Human judgments of 24 sounds (with different similarity collection methodologies) [sounds_harbke.txt], kindly provided by Colin Harbke.
 
+
 %% DATA: You need to download the data available at
 % https://www.dropbox.com/s/afov03u64es4980/MDS_data.zip
 % A link is also available on canvas
+
 
 %% TOPIC DISCUSSED TODAY:
 % - Organize your code vs. data
