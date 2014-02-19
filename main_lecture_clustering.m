@@ -1,5 +1,5 @@
 % This is a MATLAB script for the
-% CLPS1291 lab on attractiveness
+% CLPS1291 lecture on kemans.
 
 % Other m-files required: none
 % Subfunctions: none
