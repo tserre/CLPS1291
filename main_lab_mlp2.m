@@ -49,14 +49,14 @@ if PCA
     [PC, score, eigenvalues, tsquared, explained] = pca(A');
     
     A = score(:,1:Ncomp)';
-    
-    I   = randperm(size(A,2));
-    Xtr = A(:,I(1:nTr));
-    Ytr = Y(:,I(1:nTr));
-    
-    Xte = A(:,I(nTr+1:nTr+nTe));
-    Yte = Y(:,I(nTr+1:nTr+nTe));
 end
+
+I   = randperm(size(A,2));
+Xtr = A(:,I(1:nTr));
+Ytr = Y(:,I(1:nTr));
+
+Xte = A(:,I(nTr+1:nTr+nTe));
+Yte = Y(:,I(nTr+1:nTr+nTe));
 
 
 %% Train MLP
