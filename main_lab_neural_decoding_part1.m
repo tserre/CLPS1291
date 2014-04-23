@@ -51,4 +51,10 @@ load(fullfile(trainingDirectory,strcat('subject',subjectNum,'_ECOG')));
 % -- mask vs. no mask
 
 
+%% EXERCISE 4
+% Building on the previous question, add confidence intervals
+% using fill and alpha
+
+
+
 
