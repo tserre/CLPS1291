@@ -22,7 +22,7 @@ close all;
 %% Excercise for home: Try to run the code on your faces...
 clear all;
 x   = 2.0 + 3.0*randn(2,30);
-sim = 'dot-prod'; % 'rbf' or 'dot-prod' or 'sig'
+sim = 'rbf'; % 'rbf' or 'dot-prod' or 'sig'
 
 %% Excercise: Try to implement the normalized dot-product
 
