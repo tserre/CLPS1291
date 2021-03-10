@@ -19,7 +19,7 @@ close all;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Model neuron coding for distance from average for toy data
-%% Excercise for home: Try to run the code on your faces...
+%% Exercise for home: Try to run the code on your faces...
 clear all;
 x   = 2.0 + 3.0*randn(2,30);
 sim = 'rbf'; % 'rbf' or 'dot-prod' or 'sig'
