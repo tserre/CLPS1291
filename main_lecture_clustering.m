@@ -14,7 +14,7 @@
 % simple_kmedias function by Mauricio Martinez-Garcia, 2003,2007
 
 clc;
-clear all;
+% clear all;
 close all;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
