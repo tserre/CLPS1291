@@ -1,5 +1,5 @@
 % This is a MATLAB script for the
-% CLPS1291 lecture on kemans.
+% CLPS1291 lecture on k-means.
 
 % Other m-files required: none
 % Subfunctions: none
